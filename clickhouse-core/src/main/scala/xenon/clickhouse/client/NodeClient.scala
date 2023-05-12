@@ -114,6 +114,11 @@ class NodeClient(val nodeSpec: NodeSpec) extends AutoCloseable with Logging {
       .query(sql, queryId)
       .decompressClientRequest(inputCompressionType)
       .format(ClickHouseFormat.valueOf(outputFormat))
+    req.option(ClickHouseClientOption.SOCKET_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.CONNECTION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.SESSION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.TRANSACTION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.MAX_QUEUED_BUFFERS, 0)
     settings.foreach { case (k, v) => req.set(k, v) }
     Try(req.data(data).executeAndWait()) match {
       case Success(resp) => Right(deserializer(resp.getInputStream))
@@ -134,6 +139,11 @@ class NodeClient(val nodeSpec: NodeSpec) extends AutoCloseable with Logging {
     val req = client.connect(node)
       .query(sql, queryId).asInstanceOf[ClickHouseRequest[_]]
       .format(ClickHouseFormat.valueOf(outputFormat)).asInstanceOf[ClickHouseRequest[_]]
+    req.option(ClickHouseClientOption.SOCKET_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.CONNECTION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.SESSION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.TRANSACTION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.MAX_QUEUED_BUFFERS, 0)
     settings.foreach { case (k, v) => req.set(k, v).asInstanceOf[ClickHouseRequest[_]] }
     Try(req.executeAndWait()) match {
       case Success(resp) => Right(deserializer(resp.getInputStream))
@@ -169,6 +179,11 @@ class NodeClient(val nodeSpec: NodeSpec) extends AutoCloseable with Logging {
       .query(sql, queryId).asInstanceOf[ClickHouseRequest[_]]
       .compressServerResponse(outputCompressionType).asInstanceOf[ClickHouseRequest[_]]
       .format(ClickHouseFormat.valueOf(outputFormat)).asInstanceOf[ClickHouseRequest[_]]
+    req.option(ClickHouseClientOption.SOCKET_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.CONNECTION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.SESSION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.TRANSACTION_TIMEOUT, 10000000)
+    req.option(ClickHouseClientOption.MAX_QUEUED_BUFFERS, 0)
     settings.foreach { case (k, v) => req.set(k, v).asInstanceOf[ClickHouseRequest[_]] }
     Try(req.executeAndWait()) match {
       case Success(resp) => resp
